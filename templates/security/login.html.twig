@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - JobStep{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background: linear-gradient(to right, #fce4ec, #e1f5fe);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 5rem auto;
+        }
+
+        .login-container h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #00796b;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check {
+            margin-top: 1rem;
+        }
+
+        .btn-login {
+            display: block;
+            width: 100%;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="login-container">
+        <h1>Connexion à JobStep</h1>
+
+        {% if error %}
+            <div class="error-message">Identifiants invalides</div>
+        {% endif %}
+
+        <form method="post">
+            <div class="form-group">
+                <label for="inputEmail">Adresse email</label>
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword">Mot de passe</label>
+                <input type="password" name="password" id="inputPassword" class="form-control" required>
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button class="btn btn-primary mt-4 btn-login" type="submit">Se connecter</button>
+        </form>
+    </div>
+{% endblock %}

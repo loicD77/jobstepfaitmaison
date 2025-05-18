@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rendu index{% endblock %}
+
+{% block body %}
+    <h1>Rendu index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Url</th>
+                <th>DateHeure</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for rendu in rendus %}
+            <tr>
+                <td>{{ rendu.id }}</td>
+                <td>{{ rendu.url }}</td>
+                <td>{{ rendu.dateHeure ? rendu.dateHeure|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_rendu_show', {'id': rendu.id}) }}">show</a>
+                    <a href="{{ path('app_rendu_edit', {'id': rendu.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_rendu_new') }}">Create new</a>
+{% endblock %}

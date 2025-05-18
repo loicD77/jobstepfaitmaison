@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une ressource{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Nouvelle ressource</h1>
+    {{ form_start(form) }}
+        {{ form_row(form.intitule) }}
+        {{ form_row(form.presentation) }}
+        {{ form_row(form.support) }}
+        {{ form_row(form.nature) }}
+        {{ form_row(form.url) }}
+        <button class="btn btn-success">Enregistrer</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
