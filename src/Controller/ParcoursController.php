@@ -14,33 +14,35 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/parcours')]
 final class ParcoursController extends AbstractController
 {
-    #[Route(name: 'app_parcours_index', methods: ['GET'])]
-    public function index(ParcoursRepository $parcoursRepository): Response
+    #[Route('/parcours', name: 'app_parcours_index')]
+    public function index(ParcoursRepository $parcoursRepository, EtapeRepository $etapeRepository): Response
     {
         return $this->render('parcours/index.html.twig', [
             'parcours' => $parcoursRepository->findAll(),
+            'etapes' => $etapeRepository->findAll(), // 👈 Ajout de la variable
         ]);
     }
-
-    #[Route('/new', name: 'app_parcours_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    
+    #[Route('/parcours/new', name: 'app_parcours_new')]
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
-        $parcour = new Parcours();
-        $form = $this->createForm(ParcoursForm::class, $parcour);
+        $parcours = new Parcours();
+        $form = $this->createForm(ParcoursForm::class, $parcours);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($parcour);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_parcours_index', [], Response::HTTP_SEE_OTHER);
+            $parcours->setUser($this->getUser());
+            $em->persist($parcours);
+            $em->flush();
+    
+            return $this->redirectToRoute('app_parcours_index');
         }
-
+    
         return $this->render('parcours/new.html.twig', [
-            'parcour' => $parcour,
-            'form' => $form,
+            'form' => $form
         ]);
     }
+    
 
     #[Route('/{id}', name: 'app_parcours_show', methods: ['GET'])]
     public function show(Parcours $parcour): Response

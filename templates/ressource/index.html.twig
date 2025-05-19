@@ -1,20 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello RessourceController!{% endblock %}
+{% block title %}Ressources - JobStep{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .ressource-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Liste des ressources</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="text-end mb-3">
+        <a href="{{ path('app_ressource_new') }}" class="btn btn-success">Créer une ressource</a>
+    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/darras/OneDrive/Documents/licence pro projet web et mobile/symfony/jobstepfaitmaison/src/Controller/RessourceController.php</code></li>
-        <li>Your template at <code>C:/Users/darras/OneDrive/Documents/licence pro projet web et mobile/symfony/jobstepfaitmaison/templates/ressource/index.html.twig</code></li>
-    </ul>
+    {% if ressources is not empty %}
+        {% for ressource in ressources %}
+            <div class="ressource-card">
+                <h5>{{ ressource.intitule }}</h5>
+                <p><strong>Présentation :</strong> {{ ressource.presentation }}</p>
+                <p><strong>Support :</strong> {{ ressource.support }}</p>
+                <p><strong>Nature :</strong> {{ ressource.nature }}</p>
+                <p><strong>URL :</strong> <a href="{{ ressource.url }}" target="_blank">{{ ressource.url }}</a></p>
+
+                <div class="text-end mt-2">
+                    <a href="{{ path('app_ressource_edit', { id: ressource.id }) }}" class="btn btn-outline-primary btn-sm">Modifier</a>
+
+                    <form method="post" action="{{ path('app_ressource_delete', { id: ressource.id }) }}" style="display:inline;" onsubmit="return confirm('Confirmer la suppression ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ressource.id) }}">
+                        <button class="btn btn-outline-danger btn-sm">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-center">Aucune ressource pour le moment.</p>
+    {% endif %}
 </div>
 {% endblock %}

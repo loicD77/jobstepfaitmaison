@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EtapeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Parcours;
 
 #[ORM\Entity(repositoryClass: EtapeRepository::class)]
 class Etape
@@ -15,13 +16,16 @@ class Etape
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $Descriptif = null;
+    private ?string $descriptif = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $consignes = null;
 
     #[ORM\Column]
     private ?int $position = null;
+
+    #[ORM\ManyToOne(inversedBy: 'etapes')]
+    private ?Parcours $parcours = null;
 
     public function getId(): ?int
     {
@@ -30,13 +34,12 @@ class Etape
 
     public function getDescriptif(): ?string
     {
-        return $this->Descriptif;
+        return $this->descriptif;
     }
 
-    public function setDescriptif(string $Descriptif): static
+    public function setDescriptif(string $descriptif): static
     {
-        $this->Descriptif = $Descriptif;
-
+        $this->descriptif = $descriptif;
         return $this;
     }
 
@@ -48,7 +51,6 @@ class Etape
     public function setConsignes(?string $consignes): static
     {
         $this->consignes = $consignes;
-
         return $this;
     }
 
@@ -60,7 +62,17 @@ class Etape
     public function setPosition(int $position): static
     {
         $this->position = $position;
+        return $this;
+    }
 
+    public function getParcours(): ?Parcours
+    {
+        return $this->parcours;
+    }
+
+    public function setParcours(?Parcours $parcours): static
+    {
+        $this->parcours = $parcours;
         return $this;
     }
 }

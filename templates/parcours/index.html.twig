@@ -1,37 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Parcours index{% endblock %}
+{% block title %}Mes étapes{% endblock %}
 
 {% block body %}
-    <h1>Parcours index</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Étapes de mon parcours</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Object</th>
-                <th>Description</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for parcour in parcours %}
-            <tr>
-                <td>{{ parcour.id }}</td>
-                <td>{{ parcour.object }}</td>
-                <td>{{ parcour.description }}</td>
-                <td>
-                    <a href="{{ path('app_parcours_show', {'id': parcour.id}) }}">show</a>
-                    <a href="{{ path('app_parcours_edit', {'id': parcour.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="text-end mb-3">
+        <a href="{{ path('app_etape_new') }}" class="btn btn-success">➕ Créer une étape</a>
+    </div>
 
-    <a href="{{ path('app_parcours_new') }}">Create new</a>
+    {% if etapes is not empty %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Descriptif</th>
+                    <th>Consignes</th>
+                    <th>Position</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for etape in etapes %}
+                <tr>
+                    <td>{{ etape.id }}</td>
+                    <td>{{ etape.descriptif }}</td>
+                    <td>{{ etape.consignes }}</td>
+                    <td>{{ etape.position }}</td>
+                    <td>
+                        <a href="{{ path('app_etape_edit', {id: etape.id}) }}" class="btn btn-sm btn-warning">✏️ Modifier</a>
+                        
+                        <form method="post" action="{{ path('app_etape_delete', {id: etape.id}) }}" style="display:inline-block;" onsubmit="return confirm('Confirmer la suppression ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ etape.id) }}">
+                            <button class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="alert alert-info text-center">Aucune étape trouvée pour votre parcours.</p>
+    {% endif %}
+</div>
 {% endblock %}

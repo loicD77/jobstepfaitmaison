@@ -1,39 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Etape index{% endblock %}
+{% block title %}Liste des étapes{% endblock %}
 
 {% block body %}
-    <h1>Etape index</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Toutes les étapes</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Descriptif</th>
-                <th>Consignes</th>
-                <th>Position</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for etape in etapes %}
-            <tr>
-                <td>{{ etape.id }}</td>
-                <td>{{ etape.Descriptif }}</td>
-                <td>{{ etape.consignes }}</td>
-                <td>{{ etape.position }}</td>
-                <td>
-                    <a href="{{ path('app_etape_show', {'id': etape.id}) }}">show</a>
-                    <a href="{{ path('app_etape_edit', {'id': etape.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="text-end mb-3">
+        <a href="{{ path('app_etape_new') }}" class="btn btn-success">➕ Créer une nouvelle étape</a>
+    </div>
 
-    <a href="{{ path('app_etape_new') }}">Create new</a>
+    {% if etapes is not empty %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Descriptif</th>
+                    <th>Consignes</th>
+                    <th>Position</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for etape in etapes %}
+                <tr>
+                    <td>{{ etape.id }}</td>
+                    <td>{{ etape.descriptif }}</td>
+                    <td>{{ etape.consignes }}</td>
+                    <td>{{ etape.position }}</td>
+                    <td>
+                        <a href="{{ path('app_etape_show', {'id': etape.id}) }}" class="btn btn-sm btn-outline-primary">🔍 Voir</a>
+                        <a href="{{ path('app_etape_edit', {'id': etape.id}) }}" class="btn btn-sm btn-warning">✏️ Modifier</a>
+                        <form method="post" action="{{ path('app_etape_delete', {'id': etape.id}) }}" style="display:inline;" onsubmit="return confirm('Confirmer la suppression ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ etape.id) }}">
+                            <button class="btn btn-sm btn-danger">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info text-center">
+            Aucune étape enregistrée.
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

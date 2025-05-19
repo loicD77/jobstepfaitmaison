@@ -4,36 +4,56 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1>Mes étapes</h1>
+    <h1 class="text-center mb-4">Mes étapes</h1>
+
+    <div class="text-end mb-3">
+        <a href="{{ path('app_etape_new') }}" class="btn btn-success">➕ Créer une étape</a>
+    </div>
+
     {% for etape in etapes %}
-        <div class="card mt-4">
+        <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">Étape {{ etape.position }}</h5>
                 <p><strong>Description :</strong> {{ etape.descriptif }}</p>
                 <p><strong>Consignes :</strong> {{ etape.consignes }}</p>
 
-                {% if etape.ressources|length > 0 %}
+                {% if etape.ressources is defined and etape.ressources|length > 0 %}
                     <p><strong>Dernier document :</strong>
-                        <a href="{{ etape.ressources|last.url }}" target="_blank">Télécharger</a>
+                        <a href="{{ etape.ressources|last.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">📄 Télécharger</a>
                     </p>
                 {% endif %}
 
-                <h6>Déposer un rendu</h6>
-                {{ form_start(renduForms[etape.id]) }}
-                    {{ form_widget(renduForms[etape.id]) }}
-                    <button class="btn btn-primary mt-2">Uploader</button>
-                {{ form_end(renduForms[etape.id]) }}
+                <div class="mt-3">
+                    <h6>Déposer un rendu :</h6>
+                    {% if renduForms is defined and renduForms[etape.id] is defined %}
+                        {{ form_start(renduForms[etape.id]) }}
+                            {{ form_widget(renduForms[etape.id]) }}
+                            <button class="btn btn-primary mt-2">Uploader</button>
+                        {{ form_end(renduForms[etape.id]) }}
+                    {% else %}
+                        <p class="text-muted">Le formulaire d’upload n’est pas disponible.</p>
+                    {% endif %}
+                </div>
 
-                {% if etape.rendus|last and etape.rendus|last.message %}
+                {% if etape.rendus is defined and etape.rendus|last and etape.rendus|last.message %}
                     <p class="mt-3">
                         <strong>Message associé :</strong>
-                        <a href="{{ path('message_show', { id: etape.rendus|last.message.id }) }}">Voir le message</a>
+                        <a href="{{ path('message_show', { id: etape.rendus|last.message.id }) }}">📨 Voir le message</a>
                     </p>
                 {% endif %}
+
+                <div class="mt-4 d-flex gap-2">
+                    <a href="{{ path('app_etape_edit', { id: etape.id }) }}" class="btn btn-warning btn-sm">✏️ Modifier</a>
+
+                    <form method="post" action="{{ path('app_etape_delete', { id: etape.id }) }}" onsubmit="return confirm('Confirmer la suppression de cette étape ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ etape.id) }}">
+                        <button class="btn btn-danger btn-sm">🗑️ Supprimer</button>
+                    </form>
+                </div>
             </div>
         </div>
     {% else %}
-        <p>Aucune étape trouvée pour votre parcours.</p>
+        <div class="alert alert-info text-center">Aucune étape trouvée pour votre parcours.</div>
     {% endfor %}
 </div>
 {% endblock %}

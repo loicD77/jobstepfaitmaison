@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer une ressource{% endblock %}
+{% block title %}Modifier la ressource{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
-    <h1 class="mb-4">Nouvelle ressource</h1>
+    <h1 class="mb-4">Modifier la ressource</h1>
 
     {{ form_start(form) }}
         {{ form_row(form.intitule) }}
@@ -12,10 +12,9 @@
         {{ form_row(form.support) }}
         {{ form_row(form.nature) }}
         {{ form_row(form.url) }}
-        <button class="btn btn-success">Créer</button>
+        <button class="btn btn-primary">Mettre à jour</button>
     {{ form_end(form) }}
 
-   <a href="{{ path('app_ressource_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+    <a href="{{ path('app_ressource_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
 
-</div>
 {% endblock %}
